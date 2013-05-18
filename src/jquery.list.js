@@ -2,11 +2,30 @@
     var methods = {
 	init : function(options){
 	    return this.each(function(){
+		var $input = $('<input/>', { type : "text"}).addClass('jqlist-input-item'),
+		    $link = $('<a/>', {link : '#'}).text('remove'),
+		    ENTER_KEY_CODE = 13;
+
+		$input.bind('keyup.jqlist', function(e){
+
+			if(e.keyCode == ENTER_KEY_CODE){
+			    var $inputElem = $(this);
+			        $listDiv = $inputElem.closest('div').children('div'),
+			        $itemDiv = $('<div></div>')
+				.append($('<span></span>')
+					.text($inputElem.val()))
+				.append($link);
+
+			    $listDiv.append($itemDiv);
+			    $inputElem.val('');
+			}
+			
+		});
+
 		$(this)
 		    .addClass("jqlist-parent")
-		    .append('<input type="text" class="jqlist-input-item" value=""/>')
-		    .append('<div class="jqlist-list-item"/>')
-		    .end();
+		    .append($input)
+		    .append($('<div></div>').addClass('jqlist-list-item'));
 	    });
 	}
     } 
