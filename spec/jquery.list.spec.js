@@ -3,6 +3,11 @@ var  utils = {
 	var keyup = $.Event('keyup');
 	keyup.keyCode = 13;
 	$elem.trigger(keyup);
+    },
+
+    clickOn: function($elem){
+	var click = $.Event('click');
+	$elem.trigger(click);
     }
 };
 
@@ -29,11 +34,15 @@ describe('jquery.list', function(){
     });
     
     describe('adding items to list',function(){
-	var $input, spyKeyUpEvent;
+	var $input, 
+	    $divMemo, 
+	    $divListItems,
+	    spyKeyUpEvent;
 
 	beforeEach(function(){
 	    $divMemo = $('div.memo-list');
 	    $divMemo.list();
+	    $divListItems = $divMemo.children('.jqlist-list-item');
 	    $input = $divMemo.children('input');
 	    spyKeyUpEvent = spyOnEvent($input, 'keyup');
 	});
@@ -42,7 +51,7 @@ describe('jquery.list', function(){
 	    $input.val('test value');
 	    utils.pressEnterOn($input);
 	    
-	    expect($divMemo.children('div').children('div').length).toBe(1);
+	    expect($divListItems.children('.item-placeholder').length).toBe(1);
 	    expect(spyKeyUpEvent).toHaveBeenTriggered();
 	});
 	
@@ -52,7 +61,7 @@ describe('jquery.list', function(){
 	    $input.val(textValue);
 	    utils.pressEnterOn($input);
 
-	    $item = $divMemo.children('div').children('div');
+	    $item = $divListItems.children('.item-placeholder');
 
 	    expect($item.find('span')).toHaveText(textValue);
 	});
@@ -63,7 +72,7 @@ describe('jquery.list', function(){
 	    $input.val(textValue);
 	    utils.pressEnterOn($input);
 
-	    $item = $divMemo.children('div').children('div');
+	    $item = $divListItems.children('.item-placeholder');
 	    
 	    expect($item.find('a')).toHaveText('remove');
 	});
@@ -83,10 +92,79 @@ describe('jquery.list', function(){
 		utils.pressEnterOn($input);
 	    });
 
-	    expect($divMemo.children('div').children('div').length).toBe(3);
+	    expect($divListItems.children('.item-placeholder').length).toBe(3);
 	});
     });
 
+    describe('remove items from list', function(){
+	var $input, 
+	    $divListItems,
+	    $divMemo;
+
+	beforeEach(function(){
+	    $divMemo = $('div.memo-list');
+	    $divMemo.list();
+	    $divListItems = $divMemo.children('.jqlist-list-item');
+	    $input = $divMemo.children('input');
+	});
+	
+	it('should remove item by clicking on link', function(){
+	    $input.val('test value2');
+	    utils.pressEnterOn($input);
+
+	    var $addedItem = $divMemo.children('div').children('div').first(),
+	        $link = $addedItem.children('a'),
+	        spyClickEvent = spyOnEvent($link, 'click');
+	    
+	    utils.clickOn($link);
+	    
+	    expect($divListItems.children('.item-placeholder').length).toBe(0);
+	    expect(spyClickEvent).toHaveBeenTriggered();
+	});
+
+	it('should successfully remove middle item from tree items list', function(){
+	    var testValues = ['test value1', 'test value2', 'testvalue3'];
+	    testValues.forEach(function(val){
+		$input.val(val);
+		utils.pressEnterOn($input);
+	    });
+
+	    var $middleItem = $divMemo.children('div').children('div:even'),
+	        $link = $middleItem.children('a'),
+	        spyClickEvent = spyOnEvent($link, 'click'),
+	        itemsAfterRemoveOp;
+	    
+	    utils.clickOn($link);
+	    
+	    itemsAfterRemoveOp = $divListItems.children('.item-placeholder')
+
+	    expect(itemsAfterRemoveOp.length).toBe(2);
+	    expect(itemsAfterRemoveOp
+		   .filter(function(elem){
+		       return $(elem).children('a').text() === 'test value2'
+		   }).length).toBe(0);
+	    expect(spyClickEvent).toHaveBeenTriggered();
+	});
+
+	it('should succesfully remove all added items by using "remove" link', function(){
+	    var testValues = ['test value1', 'test value2', 'testvalue3'];
+
+	    testValues.forEach(function(val){
+		$input.val(val);
+		utils.pressEnterOn($input);
+	    });
+
+	    var $addedItems = $divListItems.children('.item-placeholder');
+	    
+	    $addedItems.each(function(index, divItemElem){
+		var $link = $(divItemElem).children('a');
+		utils.clickOn($link);
+	    });
+
+	    expect($divListItems.children('.item-placeholder').length).toBe(0);
+	});
+    });
+    
     describe('check ordering of inserted html elements', function(){
 	it('should input element can be placed before div list element', function(){
 	    $divMemo.list();
