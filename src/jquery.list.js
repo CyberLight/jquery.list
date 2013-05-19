@@ -6,7 +6,7 @@
     var methods = {
 	init : function(options){
 	    var thisContainer = this;
-	    return this.each(function(){
+	    return thisContainer.each(function(){
 		var $input = $('<input/>', { type : "text"}).addClass('jqlist-input-item');
 
 		$input.bind('keyup.jqlist', function(e){
@@ -62,14 +62,27 @@
 	
 	addItems : function(items){
 	    var thisContainer = this;
-	    return this.each(function(){
+	    return thisContainer.each(function(){
 		items.forEach(function(item){
 		    methods.addItem.call(thisContainer, item);  
 		});
 	    });
+	},
+	
+	getItems : function(){
+	    var itemsToReturn = [];
+	    
+	    $(this)
+		.children('div.jqlist-items-list')
+		.children('div.jqlist-item-placeholder')
+		.each(function(index, item){
+		    itemsToReturn.push($(item).children('span').text());
+		});
+	    
+	    return itemsToReturn;
 	}
     } 
-
+    
     $.fn.list = function(method){
 	if (methods[method]) {
 	    return methods[method].apply( this, Array.prototype.slice.call(arguments, 1));

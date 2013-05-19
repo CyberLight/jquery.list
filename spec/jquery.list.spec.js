@@ -236,6 +236,29 @@ describe('jquery.list', function(){
 	});
     });
     
+    describe('getting added items back from plugin control', function(){
+	var $input, 
+	    $divListItems,
+	    $divToTestPlugin,
+	    itemValues;
+
+	beforeEach(function(){
+	    itemValues = ['new item #1', 'new item #2', 'new item #3', 'new item #4'];
+	    $divToTestPlugin = $('div.test-plugin');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-items-list');
+	    $input = $divToTestPlugin.children('input');
+	});
+	
+	it('should get items back from list array', function(){
+	    $divToTestPlugin.list("addItems", itemValues);
+	    
+	    var actualValues = $divToTestPlugin.list("getItems");
+
+	    expect(actualValues).toEqual(itemValues);
+	});
+    });
+    
     describe('check ordering of inserted html elements', function(){
 	it('should input element can be placed before div list element', function(){
 	    $divToTestPlugin.list();
