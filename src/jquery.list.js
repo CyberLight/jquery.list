@@ -15,10 +15,10 @@
 				         .text('remove')
 				         .click(function(e){
 					     e.stopPropagation();
-					     $(this).closest('.item-placeholder').remove();
+					     $(this).closest('.jqlist-item-placeholder').remove();
 					 }),
 			        $itemDiv = $('<div></div>')
-				            .addClass('item-placeholder')
+				            .addClass('jqlist-item-placeholder')
 			 	            .append($('<span></span>')
 						    .text($inputElem.val()))
 				            .append($link);
@@ -32,20 +32,20 @@
 		$(this)
 		    .addClass("jqlist-parent")
 		    .append($input)
-		    .append($('<div></div>').addClass('jqlist-list-item'));
+		    .append($('<div></div>').addClass('jqlist-items-list'));
 	    });
 	},
 	
 	removeAll : function(){
 	    return this.each(function(){
-		$(this).children('div.jqlist-list-item').empty();
+		$(this).children('div.jqlist-items-list').empty();
 	    });
 	},
 	
 	removeByIdx : function(index){
 	    return this.each(function(){
 		$(this)
-		    .children('div.jqlist-list-item')
+		    .children('div.jqlist-items-list')
 		    .find('div:nth-child('+ parseInt(index) +')')
 		    .remove();
 	    });
