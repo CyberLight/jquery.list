@@ -34,6 +34,21 @@
 		    .append($input)
 		    .append($('<div></div>').addClass('jqlist-list-item'));
 	    });
+	},
+	
+	removeAll : function(){
+	    return this.each(function(){
+		$(this).children('div.jqlist-list-item').empty();
+	    });
+	},
+	
+	removeByIdx : function(index){
+	    return this.each(function(){
+		$(this)
+		    .children('div.jqlist-list-item')
+		    .find('div:nth-child('+ parseInt(index) +')')
+		    .remove();
+	    });
 	}
     } 
 

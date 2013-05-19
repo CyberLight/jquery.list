@@ -1,49 +1,51 @@
-var  utils = { 
-    pressEnterOn: function($elem){
-	var keyup = $.Event('keyup');
-	keyup.keyCode = 13;
-	$elem.trigger(keyup);
-    },
+var testValues = ['test value1', 'test value2', 'testvalue3'],
+    utils = {
+	pressEnterOn: function($elem){
+	    var keyup = $.Event('keyup');
+	    keyup.keyCode = 13;
+	    $elem.trigger(keyup);
+	},
 
-    clickOn: function($elem){
-	var click = $.Event('click');
-	$elem.trigger(click);
-    }
-};
+	clickOn: function($elem){
+	    var click = $.Event('click');
+	    $elem.trigger(click);
+	}
+    };
+
 
 describe('jquery.list', function(){
-    var $divMemo;
+    var $divToTestPlugin;
 
     beforeEach(function(){
 	jasmine.getFixtures().set('<div class="memo-list"/>');
-	$divMemo = $('div.memo-list');
+	$divToTestPlugin = $('div.memo-list');
     });
 
     it('should contain div element for testing plugin', function(){
-       expect($divMemo.length).toBe(1);
+       expect($divToTestPlugin.length).toBe(1);
     });
 
     it('should successfully insert input element into div', function(){
-	$divMemo.list();
-	expect($divMemo.children('.jqlist-input-item')).toBe('input');
+	$divToTestPlugin.list();
+	expect($divToTestPlugin.children('.jqlist-input-item')).toBe('input');
     });
 
     it('should insert div after input for inserting entered data', function(){
-	$divMemo.list();
-	expect($divMemo.children('.jqlist-list-item')).toBe('div');
+	$divToTestPlugin.list();
+	expect($divToTestPlugin.children('.jqlist-list-item')).toBe('div');
     });
     
     describe('adding items to list',function(){
 	var $input, 
-	    $divMemo, 
+	    $divToTestPlugin, 
 	    $divListItems,
 	    spyKeyUpEvent;
 
 	beforeEach(function(){
-	    $divMemo = $('div.memo-list');
-	    $divMemo.list();
-	    $divListItems = $divMemo.children('.jqlist-list-item');
-	    $input = $divMemo.children('input');
+	    $divToTestPlugin = $('div.memo-list');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-list-item');
+	    $input = $divToTestPlugin.children('input');
 	    spyKeyUpEvent = spyOnEvent($input, 'keyup');
 	});
 
@@ -99,20 +101,20 @@ describe('jquery.list', function(){
     describe('remove items from list', function(){
 	var $input, 
 	    $divListItems,
-	    $divMemo;
+	    $divToTestPlugin;
 
 	beforeEach(function(){
-	    $divMemo = $('div.memo-list');
-	    $divMemo.list();
-	    $divListItems = $divMemo.children('.jqlist-list-item');
-	    $input = $divMemo.children('input');
+	    $divToTestPlugin = $('div.memo-list');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-list-item');
+	    $input = $divToTestPlugin.children('input');
 	});
 	
 	it('should remove item by clicking on link', function(){
 	    $input.val('test value2');
 	    utils.pressEnterOn($input);
 
-	    var $addedItem = $divMemo.children('div').children('div').first(),
+	    var $addedItem = $divToTestPlugin.children('div').children('div').first(),
 	        $link = $addedItem.children('a'),
 	        spyClickEvent = spyOnEvent($link, 'click');
 	    
@@ -123,13 +125,12 @@ describe('jquery.list', function(){
 	});
 
 	it('should successfully remove middle item from tree items list', function(){
-	    var testValues = ['test value1', 'test value2', 'testvalue3'];
 	    testValues.forEach(function(val){
 		$input.val(val);
 		utils.pressEnterOn($input);
 	    });
 
-	    var $middleItem = $divMemo.children('div').children('div:even'),
+	    var $middleItem = $divToTestPlugin.children('div').children('div:even'),
 	        $link = $middleItem.children('a'),
 	        spyClickEvent = spyOnEvent($link, 'click'),
 	        itemsAfterRemoveOp;
@@ -147,8 +148,6 @@ describe('jquery.list', function(){
 	});
 
 	it('should succesfully remove all added items by using "remove" link', function(){
-	    var testValues = ['test value1', 'test value2', 'testvalue3'];
-
 	    testValues.forEach(function(val){
 		$input.val(val);
 		utils.pressEnterOn($input);
@@ -164,11 +163,45 @@ describe('jquery.list', function(){
 	    expect($divListItems.children('.item-placeholder').length).toBe(0);
 	});
     });
-    
+
+    describe('removing items use plugin commands', function(){
+	var $input, 
+	    $divListItems,
+	    $divToTestPlugin;
+
+	beforeEach(function(){
+	    $divToTestPlugin = $('div.memo-list');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-list-item');
+	    $input = $divToTestPlugin.children('input');
+	    testValues.forEach(function(vl){
+		$input.val(vl);
+		utils.pressEnterOn($input);
+	    });
+	});
+
+	it('should successfully remove all added items, using plugin "removeAll" command', function(){
+	    $divToTestPlugin.list("removeAll");
+	    
+	    expect($divListItems.children('.item-placeholder').length).toBe(0);
+	});
+
+	it('should successfully remove item by using "removeByIdx"', function(){
+	    $divToTestPlugin.list("removeByIdx", 1);
+	    
+	    var $itemsInList = $divListItems.children('.item-placeholder');
+	    expect($itemsInList.length).toBe(2);
+	    expect($itemsInList
+		   .filter(function(elem){
+		       return $(elem).children('a').text() === 'test value2'
+		   }).length).toBe(0);
+	});
+    });
+
     describe('check ordering of inserted html elements', function(){
 	it('should input element can be placed before div list element', function(){
-	    $divMemo.list();
-	    var childrens = $divMemo.children();
+	    $divToTestPlugin.list();
+	    var childrens = $divToTestPlugin.children();
 	    expect(childrens.first()).toBe('input');
 	    expect(childrens.last()).toBe('div');
 	});
