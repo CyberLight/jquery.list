@@ -198,6 +198,44 @@ describe('jquery.list', function(){
 	});
     });
 
+    describe('adding items into items list using following plugins commands: "addItem" and "addItems"', function(){
+	var $input, 
+	    $divListItems,
+	    $divToTestPlugin,
+	    itemValues;
+
+	beforeEach(function(){
+	    itemValues = ['new item #1', 'new item #2', 'new item #3', 'new item #4'];
+	    $divToTestPlugin = $('div.test-plugin');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-items-list');
+	    $input = $divToTestPlugin.children('input');
+	});
+	
+	it('should successfully add item to list using "addItem" method', function(){
+	    $divToTestPlugin.list("addItem", 'new item #1');
+	    
+	    var $itemsInList = $divListItems.children('.jqlist-item-placeholder');
+	    expect($itemsInList.length).toBe(1);
+	});
+
+	it('should successfully add more than one item to list using "addItem" method', function(){
+	    itemValues.forEach(function(value){
+		$divToTestPlugin.list("addItem", value);
+	    });
+	    
+	    var $itemsInList = $divListItems.children('.jqlist-item-placeholder');
+	    expect($itemsInList.length).toBe(4);
+	});
+
+	it('should add set of items to list', function(){
+	    $divToTestPlugin.list("addItems", itemValues);
+	    
+	    var $itemsInList = $divListItems.children('.jqlist-item-placeholder');
+	    expect($itemsInList.length).toBe(4);
+	});
+    });
+    
     describe('check ordering of inserted html elements', function(){
 	it('should input element can be placed before div list element', function(){
 	    $divToTestPlugin.list();
