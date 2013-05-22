@@ -80,7 +80,13 @@
 		});
 	    
 	    return itemsToReturn;
-	}
+	},
+	
+	destroy : function(){
+	    var $input = $(this).find('.jqlist-input-item');
+	    $input.unbind('keyup.jqlist');
+	    $(this).empty().removeClass('jqlist-parent');
+	} 
     } 
     
     $.fn.list = function(method){

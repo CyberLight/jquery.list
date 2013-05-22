@@ -267,4 +267,25 @@ describe('jquery.list', function(){
 	    expect(childrens.last()).toBe('div');
 	});
     });
+
+    describe('destroying plugin dom elements', function(){
+	var $input, 
+	    $divListItems,
+	    $divToTestPlugin,
+	    itemValues;
+
+	beforeEach(function(){
+	    $divToTestPlugin = $('div.test-plugin');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-items-list');
+	    $input = $divToTestPlugin.children('input');
+	});
+
+	it('should successfully remove plugins dom element by using plugin command "destroy"', function(){
+	    $divToTestPlugin.list("destroy");
+	    
+	    expect($divToTestPlugin).toBeEmpty();
+	    expect($divToTestPlugin).not.toHaveClass('jqlist-parent');
+	});
+    });
 }); 
