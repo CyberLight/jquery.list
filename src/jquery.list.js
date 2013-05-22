@@ -44,7 +44,7 @@
 	addItem : function(itemText){
 	    return this.each(function(){
 		var $listDiv = $(this).children('div.jqlist-items-list'),
-		    $link = $('<a/>', {link : '#'})
+		    $link = $('<a/>', {href : '#'})
 		              .text('remove')
 		              .click(function(e){
 				  e.stopPropagation();

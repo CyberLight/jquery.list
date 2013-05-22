@@ -1,0 +1,54 @@
+input.jqlist-input-item:focus
+{
+    outline: none;
+    border: 1px solid #4d90fe;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+input.jqlist-input-item
+{
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-block;
+    height: 29px;
+    margin: 0;
+    padding: 0 8px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+}
+
+.jqlist-item-placeholder > a
+{
+    text-decoration: none;
+    color: red;
+    float: right;
+}
+
+.jqlist-item-placeholder > span
+{
+    float: left;
+    font-size: 13px;
+    word-wrap: break-word;
+    width: 70%;
+}
+
+.jqlist-item-placeholder {
+    clear: both;
+}
+
+.jqlist-items-list > .jqlist-item-placeholder
+{
+    float: left;
+    line-height: 35px;
+    border-bottom: solid 1px #BBB;
+    width: 300px;
+}
