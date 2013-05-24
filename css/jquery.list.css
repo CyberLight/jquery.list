@@ -52,3 +52,13 @@ input.jqlist-input-item
     border-bottom: solid 1px #BBB;
     width: 300px;
 }
+
+.filter-active
+{
+    background-image: url(images/filter-a.png) no-repeat 100% 100%;
+}
+
+.filter-not-active
+{
+    background-image: url(images/filter-na.png) no-repeat 100% 100%;
+}

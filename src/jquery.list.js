@@ -5,15 +5,21 @@
 
     var methods = {
 	init : function(options){
-	    var thisContainer = this;
-	    return thisContainer.each(function(){
-		var $input = $('<input/>', { type : "text"}).addClass('jqlist-input-item');
+	    var $this = this,
+   	        settings = { filterMode : false },
+	        data = $this.data('jqlist', { settings : settings, widgets : {} });
 
+	    return $this.each(function(){
+		var $input = $('<input/>', { type : "text"}).addClass('jqlist-input-item'),
+		    $filterIconDiv = $('<div></div>')
+		                      .addClass('jqlist-filter-icon')
+		                      .addClass('filter-not-active');
+		
 		$input.bind('keyup.jqlist', function(e){
 
 			if(e.keyCode == constants.ENTER_KEY_CODE){
 			    var $inputElem = $(this);
-			    methods.addItem.call(thisContainer, $inputElem.val());
+			    methods.addItem.call($this, $inputElem.val());
 			    $inputElem.val('');
 			}
 			
@@ -22,6 +28,7 @@
 		$(this)
 		    .addClass("jqlist-parent")
 		    .append($input)
+		    .append($filterIconDiv)
 		    .append($('<div></div>').addClass('jqlist-items-list'));
 	    });
 	},
@@ -61,10 +68,10 @@
 	},
 	
 	addItems : function(items){
-	    var thisContainer = this;
-	    return thisContainer.each(function(){
+	    var $this = this;
+	    return $this.each(function(){
 		items.forEach(function(item){
-		    methods.addItem.call(thisContainer, item);  
+		    methods.addItem.call($this, item);  
 		});
 	    });
 	},
@@ -80,6 +87,27 @@
 		});
 	    
 	    return itemsToReturn;
+	},
+	
+	filterMode : function(){
+	    var data = $(this).data('jqlist');	
+	        $filterIconDiv = $(this).find('.jqlist-filter-icon');
+	    
+	    if(arguments.length > 0)
+		data.settings.filterMode = arguments[0];
+
+	    if(data.settings.filterMode){
+		$filterIconDiv
+		    .removeClass('filter-not-active')
+		    .addClass('filter-active');
+	    }else{
+		$filterIconDiv
+		    .removeClass('filter-active')
+		    .addClass('filter-not-active');
+	    }
+	    
+
+	    return data.settings.filterMode;
 	},
 	
 	destroy : function(){

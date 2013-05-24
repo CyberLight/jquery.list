@@ -288,4 +288,51 @@ describe('jquery.list', function(){
 	    expect($divToTestPlugin).not.toHaveClass('jqlist-parent');
 	});
     });
+
+    describe('filtering items', function(){
+	var $input, 
+	    $divListItems,
+	    $divToTestPlugin,
+	    itemValues;
+
+	beforeEach(function(){
+	    $divToTestPlugin = $('div.test-plugin');
+	    $divToTestPlugin.list();
+	    $divListItems = $divToTestPlugin.children('.jqlist-items-list');
+	    $input = $divToTestPlugin.children('input');
+	});
+
+	it('should contains div for filter icon', function(){
+	    var $result = $divToTestPlugin.find('.jqlist-filter-icon');
+	    expect($result).toBe('div');
+	});
+
+	it('should return "false" by default, after calling filterMode method', function(){
+ 	    var filterModeStatus = $divToTestPlugin.list('filterMode');
+	    expect(filterModeStatus).toBe(false);
+	});
+
+	it('should return "true" after setting filterMode to "true"', function(){
+	    var filterModeStatus = $divToTestPlugin.list('filterMode', true);
+	    expect(filterModeStatus).toBe(true);
+	});
+
+	it('should added "filter-active" css class after filterMode On', function(){
+	    var filterModeStatus = $divToTestPlugin.list('filterMode', true);
+	        iconDiv = $divToTestPlugin.find('.filter-active');
+	    expect(iconDiv).toBe('div');
+	});
+	
+	it('should add valid css class to icon div when switching filterMode', function(){
+	    var $iconDivActive,	$iconDivDeactiv;
+	    $divToTestPlugin.list('filterMode', true);
+	    $iconDivActive = $divToTestPlugin.find('.filter-active');
+
+	    $divToTestPlugin.list('filterMode', false);
+	    $iconDivDeactiv = $divToTestPlugin.find('.filter-not-active')
+
+	    expect($iconDivActive).toBe('div');
+	    expect($iconDivDeactiv).toBe('div');
+	});
+    });
 }); 
